@@ -159,9 +159,13 @@ class XPathHxXml extends XPathXml {
     /** Tests if this [XPathXml] represents the same node as the
      * [operand]. */
     override public function is(operand:XPathXml):Bool {
-        return Std.is(operand, XPathHxXml) &&
-                hxXml == cast(operand, XPathHxXml).hxXml &&
-                attributeName == cast(operand, XPathHxXml).attributeName;
+        if (!Std.is(operand, XPathHxXml)) {
+            return false;
+        }
+        var typedOperand:XPathHxXml = cast operand;
+        return hxXml == typedOperand.hxXml &&
+                attributeName == typedOperand.attributeName &&
+                attributeParent == typedOperand.attributeParent;
     }
 
     /** Gets an iterator over this node's attributes. */

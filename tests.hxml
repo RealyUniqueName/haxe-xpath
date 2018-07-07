@@ -1,0 +1,4 @@
+common.hxml
+-debug
+-js bin/test.js
+# -cmd neko bin/test.n
