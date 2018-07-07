@@ -35,31 +35,31 @@ class PathStep implements Expression {
         if (nextStep == null) {
             return new XPathNodeSet(step(context));
         } else {
-            var me = this;
-            var index = 0;
-            var selected = Lambda.array(step(context));
-            var nextNode = null;
-            var nextStepNodes:Iterator<XPathXml> = new List<XPathXml>().iterator();
-            var hasNext = function() {
-                return nextNode != null;
-            };
-            var next = function() {
-                var node = nextNode;
-                while (!nextStepNodes.hasNext() && index < selected.length) {
-                    var nextStepContext = new Context(selected[index], index + 1, selected.length, context.environment);
-                    var nextStepResult = me.nextStep.evaluate(nextStepContext);
-                    nextStepNodes = nextStepResult.getNodes().iterator();
-                    ++index;
-                }
-                if (nextStepNodes.hasNext()) {
-                    nextNode = nextStepNodes.next();
-                } else {
-                    nextNode = null;
-                }
-                return node;
-            };
-            next();
-            var iterator = function() {
+            function iterator() {
+                var me = this;
+                var index = 0;
+                var selected = Lambda.array(step(context));
+                var nextNode = null;
+                var nextStepNodes:Iterator<XPathXml> = new List<XPathXml>().iterator();
+                var hasNext = function() {
+                    return nextNode != null;
+                };
+                var next = function() {
+                    var node = nextNode;
+                    while (!nextStepNodes.hasNext() && index < selected.length) {
+                        var nextStepContext = new Context(selected[index], index + 1, selected.length, context.environment);
+                        var nextStepResult = me.nextStep.evaluate(nextStepContext);
+                        nextStepNodes = nextStepResult.getNodes().iterator();
+                        ++index;
+                    }
+                    if (nextStepNodes.hasNext()) {
+                        nextNode = nextStepNodes.next();
+                    } else {
+                        nextNode = null;
+                    }
+                    return node;
+                };
+                next();
                 return {
                     hasNext: hasNext,
                     next: next
