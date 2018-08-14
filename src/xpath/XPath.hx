@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -29,7 +29,7 @@ import xpath.xml.XPathXml;
 
 
 /** Class implementing an XPath query.
- * 
+ *
  * This library may be extended to work with any set of XML classes
  * by extending [xpath.xml.XPathXml] to wrap your preferred
  * implementation. A wrapper for the standard Haxe [Xml] class is

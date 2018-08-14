@@ -272,8 +272,8 @@ class XPathTest extends TestCase {
     function testComplexContains() {
         var xpathXml = XPathHxXml.wrapNode(xml);
         var xpathQry = new XPath("//*[contains(@name, 'bar')]");
-        var nodes = Lambda.array(xpathQry.selectNodes(xpathXml));
+        var nodes = xpathQry.selectNodes(xpathXml);
         assertEquals(1, nodes.length);
-        assertEquals(e, cast(nodes[0], XPathHxXml).getWrappedXml());
+        assertEquals(d, cast(nodes[0], XPathHxXml).getWrappedXml());
     }
 }

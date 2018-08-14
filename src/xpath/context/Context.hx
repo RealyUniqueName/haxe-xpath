@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -39,13 +39,15 @@ class Context {
     /** The environment. */
     public var environment (default, null):Environment;
 
+    public var document(default,null):Array<XPathXml>;
 
     /** Constructs a new Context. */
-    public function new(node:XPathXml, position:Int, size:Int, environment:Environment) {
+    public function new(node:XPathXml, position:Int, size:Int, environment:Environment, ?document:Array<XPathXml>) {
         this.node = node;
         this.position = position;
         this.size = size;
         this.environment = environment;
+        this.document = document != null ? document : [for(node in node.getDocumentIterator()) node];
     }
 
     /** Calls a function with the specified parameters and returns the

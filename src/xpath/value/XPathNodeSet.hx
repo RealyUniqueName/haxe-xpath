@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -19,7 +19,6 @@ import xpath.xml.XPathXml;
 import xpath.EvaluationException;
 import xpath.XPathError;
 
-
 /** Class implementing the node set data type used by XPath
  * queries.
  *
@@ -30,19 +29,25 @@ import xpath.XPathError;
  * resulting nodes immediately, for example:[
  * var nodes = Lambda.array(xpathNodeSet.getNodes());] */
 class XPathNodeSet extends XPathString {
-    var nodes:Iterable<XPathXml>;
+    var nodes:Array<XPathXml>;
+    var document:Array<XPathXml>;
 
 
     /** Constructs a new [XPathNodeSet] containing the specified
      * [nodes]. */
-    public function new(?nodes:Iterable<XPathXml>) {
+    public function new(nodes:Array<XPathXml>, ?allDocumentOrderedNodes:Array<XPathXml>) {
         super();
-        typeName = "node set";
-        if (nodes == null) {
-            this.nodes = new Array<XPathXml>();
+        if(allDocumentOrderedNodes != null) {
+            document = allDocumentOrderedNodes;
         } else {
-            this.nodes = nodes;
+            if(nodes.length > 0) {
+                document = [for(node in nodes[0].getDocumentIterator()) node];
+            } else {
+                document = [];
+            }
         }
+        typeName = "node set";
+        this.nodes = nodes;
     }
 
     /** Gets the boolean value of this [XPathNodeSet] as per the
@@ -81,14 +86,13 @@ class XPathNodeSet extends XPathString {
 
     /** Gets an array of the nodes contained by this node set in
      * document order. */
-    public function getNodesDocumentOrder() {
-        var result = new List<XPathXml>();
+    public function getNodesDocumentOrder():Array<XPathXml> {
+        var result = [];
 
-        var nodesIterator = nodes.iterator();
-        if (nodesIterator.hasNext()) {
-            for (node1 in nodesIterator.next().getDocumentIterator()) {
+        if (nodes.length > 0) {
+            for (node1 in document) {
                 for (node2 in nodes) {
-                    if (node1.is(node2)) result.add(node1);
+                    if (node1.is(node2)) result.push(node1);
                 }
             }
         }
@@ -100,9 +104,8 @@ class XPathNodeSet extends XPathString {
      * document order. Throws [EvaluationException] if the node set is
      * empty. */
     public function getFirstNodeDocumentOrder() {
-        var nodesIterator = nodes.iterator();
-        if (nodesIterator.hasNext()) {
-            for (node1 in nodesIterator.next().getDocumentIterator()) {
+        if (nodes.length > 0) {
+            for (node1 in document) {
                 for (node2 in nodes) {
                     if (node1.is(node2)) return node1;
                 }
@@ -272,14 +275,14 @@ class XPathNodeSet extends XPathString {
      * [rightOperand] is not an [XPathNodeSet]. */
     override public function union(rightOperand:XPathValue) {
         if (Std.is(rightOperand, XPathNodeSet)) {
-            var nodes = new List<XPathXml>();
+            var nodes = [];
             for (node in getNodes()) {
-                nodes.add(node);
+                nodes.push(node);
             }
             for (node in cast(rightOperand, XPathNodeSet).getNodes()) {
-                nodes.add(node);
+                nodes.push(node);
             }
-            return new XPathNodeSet(nodes);
+            return new XPathNodeSet(nodes, document);
         } else {
             return super.union(rightOperand);
         }
