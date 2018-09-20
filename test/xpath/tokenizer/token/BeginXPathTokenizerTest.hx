@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -27,7 +27,7 @@ class BeginXPathTokenizerTest extends TestCase {
         for (garbage in ["", "dgnxcmbo", "/xcv.# bcds", ",v/x l xf[kgs;"]) {
             for (whitespace in ["", " ", "    "]) {
                 var input = new TokenizerInput(whitespace + garbage);
-                var output = BeginXPathTokenizer.getInstance().tokenize(input);
+                var output = BeginXPathTokenizer.getInstance().tokenize(input).tokens();
 
                 assertEquals(1, output.result.length);
                 assertEquals(whitespace.length, output.characterLength);
@@ -41,7 +41,7 @@ class BeginXPathTokenizerTest extends TestCase {
 
                     var caught = false;
                     try {
-                        BeginXPathTokenizer.getInstance().tokenize(input);
+                        BeginXPathTokenizer.getInstance().tokenize(input).tokens();
                     } catch (exception:ExpectedException) {
                         caught = true;
                         assertEquals(pos, exception.position);

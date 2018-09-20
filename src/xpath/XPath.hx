@@ -106,7 +106,10 @@ class XPath {
         }
 
         var tokenizerInput = new TokenizerInput(xpathStr);
-        var tokenizerOutput = XPathTokenizer.getInstance().tokenize(tokenizerInput);
+        var tokenizerOutput = switch(XPathTokenizer.getInstance().tokenize(tokenizerInput)) {
+            case Left(out): out;
+            case Right(pending): throw new xpath.tokenizer.ExpectedException(pending);
+        }
         if (tokenizerOutput.result == null) {
             throw new XPathError("Unknown tokenization failure");
         }

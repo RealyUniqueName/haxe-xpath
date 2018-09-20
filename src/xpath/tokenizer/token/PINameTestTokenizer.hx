@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -19,7 +19,7 @@ import xpath.tokenizer.token.TokenTokenizer;
 import xpath.tokenizer.TokenizerInput;
 import xpath.tokenizer.Token;
 import xpath.tokenizer.ExpectedException;
-
+import haxe.ds.Either;
 
 /** [Tokenizer] which tokenizes according to the [PINameTest]
  * rule. */
@@ -42,14 +42,14 @@ class PINameTestTokenizer extends TokenTokenizer {
         var pos = input.position;
 
         if (input.query.substr(pos, 22) != "processing-instruction") {
-            throw new ExpectedException([{ tokenName: "PINameTest", position: input.position }]);
+            return Right([{ tokenName: "PINameTest", position: input.position }]);
         }
 
         pos += 22;
         pos += countWhitespace(input.query, pos);
 
         if (input.query.charAt(pos) != "(") {
-            throw new ExpectedException([{ tokenName: "PINameTest", position: input.position }]);
+            return Right([{ tokenName: "PINameTest", position: input.position }]);
         }
 
         ++pos;
@@ -70,7 +70,7 @@ class PINameTestTokenizer extends TokenTokenizer {
                     nameStartPos, pos - nameStartPos
                 );
             } else {
-                throw new ExpectedException([{ tokenName: "PINameTest", position: input.position }]);
+                return Right([{ tokenName: "PINameTest", position: input.position }]);
             }
 
             ++pos;
@@ -85,9 +85,9 @@ class PINameTestTokenizer extends TokenTokenizer {
 
             var result = [ cast(new PINameTestToken(name), Token) ];
             var characterLength = pos - input.position;
-            return input.getOutput(result, characterLength);
+            return Left(input.getOutput(result, characterLength));
         } else {
-            throw new ExpectedException([ { tokenName: "PINameTest", position: input.position } ]);
+            return Right([ { tokenName: "PINameTest", position: input.position } ]);
         }
     }
 }

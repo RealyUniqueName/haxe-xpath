@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -22,7 +22,7 @@ import xpath.tokenizer.TokenizerInput;
 import xpath.tokenizer.Token;
 import xpath.tokenizer.ExpectedException;
 import xpath.tokenizer.TokenizerError;
-
+import haxe.ds.Either;
 
 class DisjunctionTest extends TestCase {
     function testEmpty() {
@@ -42,25 +42,25 @@ class DisjunctionTest extends TestCase {
             cast(new StringTokenizer("a"), Tokenizer),
             new StringTokenizer("b"), new StringTokenizer("aa")
         ]);
-        var output = tokenizer.tokenize(input);
+        var output = tokenizer.tokenize(input).tokens();
         assertEquals(1, output.characterLength);
         assertEquals(1, output.result.length);
         assertTrue(Std.is(output.result[0], StringToken));
         assertEquals("a", cast(output.result[0], StringToken).string);
 
-        output = tokenizer.tokenize(output.getNextInput());
+        output = tokenizer.tokenize(output.getNextInput()).tokens();
         assertEquals(1, output.characterLength);
         assertEquals(1, output.result.length);
         assertTrue(Std.is(output.result[0], StringToken));
         assertEquals("b", cast(output.result[0], StringToken).string);
 
-        output = tokenizer.tokenize(output.getNextInput());
+        output = tokenizer.tokenize(output.getNextInput()).tokens();
         assertEquals(2, output.characterLength);
         assertEquals(1, output.result.length);
         assertTrue(Std.is(output.result[0], StringToken));
         assertEquals("aa", cast(output.result[0], StringToken).string);
 
-        output = tokenizer.tokenize(output.getNextInput());
+        output = tokenizer.tokenize(output.getNextInput()).tokens();
         assertEquals(1, output.characterLength);
         assertEquals(1, output.result.length);
         assertTrue(Std.is(output.result[0], StringToken));
@@ -68,7 +68,7 @@ class DisjunctionTest extends TestCase {
 
         var caught = false;
         try {
-            output = tokenizer.tokenize(output.getNextInput());
+            output = tokenizer.tokenize(output.getNextInput()).tokens();
         } catch (exception:ExpectedException) {
             assertEquals(5, exception.position);
             caught = true;
@@ -98,9 +98,9 @@ private class StringTokenizer implements Tokenizer {
         if (input.query.substr(input.position, string.length) == string) {
             var result = [ cast(new StringToken(string), Token) ];
             var characterLength = string.length;
-            return input.getOutput(result, characterLength);
+            return Left(input.getOutput(result, characterLength));
         } else {
-            throw new ExpectedException([{ tokenName: "StringToken", position: input.position }]);
+            return Right([{ tokenName: "StringToken", position: input.position }]);
         }
     }
 }

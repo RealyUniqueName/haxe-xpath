@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -17,7 +17,7 @@
 package xpath.tokenizer.util;
 import xpath.tokenizer.Tokenizer;
 import xpath.tokenizer.TokenizerInput;
-
+import haxe.ds.Either;
 
 /** Tokenizer which tokenizes according to a sequence of rules, e.g.
  * [A B C].*/
@@ -36,17 +36,26 @@ class Sequence implements Tokenizer {
      *
      * Throws [TokenizerException] if the [input] cannot be
      * tokenized by this [Tokenizer]. */
-    public function tokenize(input:TokenizerInput) {
+    public function tokenize(input:TokenizerInput):Either<TokenizerOutput,Array<{tokenName:String, position:Int}>> {
         var iterator = tokenizers.iterator();
-        var output = iterator.next().tokenize(input);
-        var result = output.result;
-        var characterLength = output.characterLength;
-        while (iterator.hasNext()) {
-            output = iterator.next().tokenize(output.getNextInput());
-            result = result.concat(output.result);
-            characterLength += output.characterLength;
-        }
+        switch(iterator.next().tokenize(input)) {
+            case Left(output):
+                var result = output.result;
+                var characterLength = output.characterLength;
+                while (iterator.hasNext()) {
+                    switch(iterator.next().tokenize(output.getNextInput())) {
+                        case Left(out):
+                            output = out;
+                        case pending:
+                            return pending;
+                    }
+                    result = result.concat(output.result);
+                    characterLength += output.characterLength;
+                }
 
-        return input.getOutput(result, characterLength);
+                return Left(input.getOutput(result, characterLength));
+            case pending:
+                return pending;
+        }
     }
 }

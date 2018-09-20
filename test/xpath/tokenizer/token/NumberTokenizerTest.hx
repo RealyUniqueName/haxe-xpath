@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -28,7 +28,7 @@ class NumberTokenizerTest extends TestCase {
             for (whitespace in ["", " ", "    "]) {
                 for (garbage in ["", "djgsogj", "!$()ï¿½*"]) {
                     var input = new TokenizerInput(number + whitespace + garbage);
-                    var output = NumberTokenizer.getInstance().tokenize(input);
+                    var output = NumberTokenizer.getInstance().tokenize(input).tokens();
 
                     assertEquals(1, output.result.length);
                     assertEquals(number.length + whitespace.length, output.characterLength);
@@ -45,7 +45,7 @@ class NumberTokenizerTest extends TestCase {
 
             var caught = false;
             try {
-                NumberTokenizer.getInstance().tokenize(input);
+                NumberTokenizer.getInstance().tokenize(input).tokens();
             } catch (exception:ExpectedException) {
                 caught = true;
                 assertEquals(0, exception.position);

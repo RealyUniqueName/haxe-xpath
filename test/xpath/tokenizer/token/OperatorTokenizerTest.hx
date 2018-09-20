@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -51,7 +51,7 @@ class OperatorTokenizerTest extends TestCase {
             for (garbage in ["", "fmnvisfjg-", "cx. ]", "?MVCZ"]) {
                 for (operator in operators.keys()) {
                     var input = new TokenizerInput(operator + whitespace + garbage);
-                    var output = OperatorTokenizer.getInstance().tokenize(input);
+                    var output = OperatorTokenizer.getInstance().tokenize(input).tokens();
 
                     assertEquals(1, output.result.length);
                     assertEquals(operator.length + whitespace.length, output.characterLength);
@@ -68,7 +68,7 @@ class OperatorTokenizerTest extends TestCase {
 
             var caught = false;
             try {
-                OperatorTokenizer.getInstance().tokenize(input);
+                OperatorTokenizer.getInstance().tokenize(input).tokens();
             } catch (exception:ExpectedException) {
                 caught = true;
                 assertEquals(0, exception.position);

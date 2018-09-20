@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -20,7 +20,7 @@ import xpath.tokenizer.Tokenizer;
 import xpath.tokenizer.TokenizerInput;
 import xpath.tokenizer.TokenizerException;
 import xpath.tokenizer.Token;
-
+import haxe.ds.Either;
 
 /** Tokenizer which tokenizes according to a sequence of rules which
  * may repeat zero or more times, e.g. [(A B C)*]. */
@@ -39,20 +39,24 @@ class Repetition extends Sequence {
         var done = false;
         while (!done) {
             try {
-                var output = super.tokenize(workingInput);
-                result = result.concat(output.result);
-                characterLength += output.characterLength;
-                if (output.isComplete()) {
-                    characterLength = null;
-                    done = true;
-                } else {
-                    workingInput = output.getNextInput();
+                switch(super.tokenize(workingInput)) {
+                    case Left(output):
+                        result = result.concat(output.result);
+                        characterLength += output.characterLength;
+                        if (output.isComplete()) {
+                            characterLength = null;
+                            done = true;
+                        } else {
+                            workingInput = output.getNextInput();
+                        }
+                    case Right(pendingTokens):
+                        throw new ExpectedException(pendingTokens);
                 }
             } catch (exception:TokenizerException) {
                 done = true;
             }
         }
 
-        return input.getOutput(result, characterLength);
+        return Left(input.getOutput(result, characterLength));
     }
 }

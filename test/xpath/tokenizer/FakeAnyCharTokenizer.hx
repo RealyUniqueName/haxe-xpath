@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -19,7 +19,7 @@ import xpath.tokenizer.Tokenizer;
 import xpath.tokenizer.TokenizerInput;
 import xpath.tokenizer.Token;
 import xpath.tokenizer.ExpectedException;
-
+import haxe.ds.Either;
 
 class FakeAnyCharTokenizer implements Tokenizer {
    public function new() {
@@ -29,9 +29,9 @@ class FakeAnyCharTokenizer implements Tokenizer {
         if (input.position < input.query.length) {
             var result = [ cast(new FakeAnyCharToken(), Token) ];
             var characterLength = 1;
-            return input.getOutput(result, characterLength);
+            return Left(input.getOutput(result, characterLength));
         } else {
-            throw new ExpectedException([{tokenName: "AnyChar", position: input.position}]);
+            return Right([{tokenName: "AnyChar", position: input.position}]);
         }
     }
 }

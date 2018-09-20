@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -19,7 +19,7 @@ import xpath.tokenizer.util.Sequence;
 import xpath.tokenizer.Tokenizer;
 import xpath.tokenizer.TokenizerInput;
 import xpath.tokenizer.TokenizerException;
-
+import haxe.ds.Either;
 
 /** [Tokenizer] which tokenizes according to an optional
  * sequence of rules, e.g. [(A B C)?]. */
@@ -30,11 +30,14 @@ class Optional extends Sequence {
         super(tokenizers);
     }
 
-    override public function tokenize(input:TokenizerInput) {
-        try {
-            return super.tokenize(input);
+    override public function tokenize(input:TokenizerInput):Either<TokenizerOutput,Array<{tokenName:String, position:Int}>> {
+        return try {
+            switch(super.tokenize(input)) {
+                case Left(tokens): Left(tokens);
+                case _: Left(input.getOutput([], 0));
+            }
         } catch (exception:TokenizerException) {
-            return input.getOutput([], 0);
+            Left(input.getOutput([], 0));
         }
     }
 }

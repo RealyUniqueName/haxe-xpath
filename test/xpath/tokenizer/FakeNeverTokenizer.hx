@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -19,14 +19,13 @@ import xpath.tokenizer.Tokenizer;
 import xpath.tokenizer.TokenizerInput;
 import xpath.tokenizer.TokenizerOutput;
 import xpath.tokenizer.ExpectedException;
-
+import haxe.ds.Either;
 
 class FakeNeverTokenizer implements Tokenizer {
     public function new() {
     }
 
-    public function tokenize(input:TokenizerInput):TokenizerOutput {
-        throw new ExpectedException([{tokenName: "Never", position: input.position}]);
-        return null;
+    public function tokenize(input:TokenizerInput) {
+        return Right([{tokenName: "Never", position: input.position}]);
     }
 }

@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -19,6 +19,7 @@ import xpath.tokenizer.token.TokenTokenizer;
 import xpath.tokenizer.TokenizerInput;
 import xpath.tokenizer.Token;
 import xpath.Axis;
+import haxe.ds.Either;
 
 
 /** [Tokenizer] which tokenizes according to the [Axis] rule. */
@@ -64,7 +65,7 @@ class AxisTokenizer extends TokenTokenizer {
         });
     }
 
-    override public function tokenize(input:TokenizerInput) {
+    override public function tokenize(input:TokenizerInput):Either<TokenizerOutput,Array<{tokenName:String, position:Int}>> {
         var pos = input.position;
 
         var axis = null;
@@ -98,6 +99,6 @@ class AxisTokenizer extends TokenTokenizer {
         var characterLength = pos - input.position;
         var result = [ cast(new AxisToken(axis), Token) ];
 
-        return input.getOutput(result, characterLength);
+        return Left(input.getOutput(result, characterLength));
     }
 }

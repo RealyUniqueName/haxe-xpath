@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -29,7 +29,7 @@ class BeginFunctionCallTokenizerTest extends TestCase {
                 for (whitespace2 in ["", " ", "   "]) {
                     for (garbage in ["", "cxvpsf", "/c./ ,", "(jdfsjfp"]) {
                         var input = new TokenizerInput(functionName + whitespace + "(" + whitespace2 + garbage);
-                        var output = BeginFunctionCallTokenizer.getInstance().tokenize(input);
+                        var output = BeginFunctionCallTokenizer.getInstance().tokenize(input).tokens();
 
                         assertEquals(1, output.result.length);
                         assertEquals(functionName.length + whitespace.length + 1 + whitespace2.length,
@@ -50,7 +50,7 @@ class BeginFunctionCallTokenizerTest extends TestCase {
 
                     var caught = false;
                     try {
-                        BeginFunctionCallTokenizer.getInstance().tokenize(input);
+                        BeginFunctionCallTokenizer.getInstance().tokenize(input).tokens();
                     } catch (exception:ExpectedException) {
                         assertEquals(0, exception.position);
                         caught = true;
@@ -66,7 +66,7 @@ class BeginFunctionCallTokenizerTest extends TestCase {
 
                     var caught = false;
                     try {
-                        BeginFunctionCallTokenizer.getInstance().tokenize(input);
+                        BeginFunctionCallTokenizer.getInstance().tokenize(input).tokens();
                     } catch (exception:ExpectedException) {
                         assertEquals(0, exception.position);
                         caught = true;

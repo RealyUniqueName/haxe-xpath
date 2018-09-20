@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -52,7 +52,7 @@ class AxisTokenizerTest extends TestCase {
                         for (whitespace2 in ["", " ", "    "]) {
                             var input = new TokenizerInput(axisName + whitespace + "::" +
                                     whitespace2 + extraGarbage + garbage);
-                            var output = AxisTokenizer.getInstance().tokenize(input);
+                            var output = AxisTokenizer.getInstance().tokenize(input).tokens();
 
                             assertEquals(1, output.result.length);
                             assertEquals(axisName.length + whitespace.length + 2 + whitespace2.length,
@@ -62,7 +62,7 @@ class AxisTokenizerTest extends TestCase {
                         }
 
                         var input = new TokenizerInput(axisName + whitespace + extraGarbage + garbage);
-                        var output = AxisTokenizer.getInstance().tokenize(input);
+                        var output = AxisTokenizer.getInstance().tokenize(input).tokens();
 
                         assertEquals(1, output.result.length);
                         assertEquals(0, output.characterLength);
@@ -72,7 +72,7 @@ class AxisTokenizerTest extends TestCase {
                 }
 
                 var input = new TokenizerInput("@" + whitespace + garbage);
-                var output = AxisTokenizer.getInstance().tokenize(input);
+                var output = AxisTokenizer.getInstance().tokenize(input).tokens();
 
                 assertEquals(1, output.result.length);
                 assertEquals(1 + whitespace.length, output.characterLength);
@@ -80,7 +80,7 @@ class AxisTokenizerTest extends TestCase {
                 assertEquals(Attribute, cast(output.result[0], AxisToken).axis);
 
                 input = new TokenizerInput(whitespace + garbage);
-                output = AxisTokenizer.getInstance().tokenize(input);
+                output = AxisTokenizer.getInstance().tokenize(input).tokens();
 
                 assertEquals(1, output.result.length);
                 assertEquals(whitespace.length, output.characterLength);

@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -19,7 +19,7 @@ import xpath.tokenizer.token.TokenTokenizer;
 import xpath.tokenizer.TokenizerInput;
 import xpath.tokenizer.Token;
 import xpath.tokenizer.ExpectedException;
-
+import haxe.ds.Either;
 
 /** [Tokenizer] which tokenizes according to the [NameTest] rule. */
 class NameTestTokenizer extends TokenTokenizer {
@@ -45,7 +45,7 @@ class NameTestTokenizer extends TokenTokenizer {
         if (input.query.charAt(pos) == "*") {
             var result = [ cast(new NameTestToken("*"), Token) ];
             var characterLength = 1 + countWhitespace(input.query, pos + 1);
-            return input.getOutput(result, characterLength);
+            return Left(input.getOutput(result, characterLength));
         }
 
         // check for NCName
@@ -54,7 +54,7 @@ class NameTestTokenizer extends TokenTokenizer {
                 ((charCode < 65 || charCode > 90) &&
                         (charCode < 97 || charCode > 122) &&
                         charCode < 128 && charCode != 95)) {
-            throw new ExpectedException([{
+            return Right([{
                 tokenName: "NameTest",
                 position: input.position
             }]);
@@ -74,7 +74,7 @@ class NameTestTokenizer extends TokenTokenizer {
             var name = input.query.substr(input.position, characterLength);
             var result = [ cast(new NameTestToken(name), Token) ];
             characterLength += countWhitespace(input.query, pos);
-            return input.getOutput(result, characterLength);
+            return Left(input.getOutput(result, characterLength));
         }
 
         // check for wildcard
@@ -83,7 +83,7 @@ class NameTestTokenizer extends TokenTokenizer {
             var name = input.query.substr(input.position, characterLength) + "*";
             var result = [ cast(new NameTestToken(name), Token) ];
             characterLength += 1 + countWhitespace(input.query, pos + 1);
-            return input.getOutput(result, characterLength);
+            return Left(input.getOutput(result, characterLength));
         }
 
         // check for NCName
@@ -92,7 +92,7 @@ class NameTestTokenizer extends TokenTokenizer {
                 ((charCode < 65 || charCode > 90) &&
                         (charCode < 97 || charCode > 122) &&
                         charCode < 128 && charCode != 95)) {
-            throw new ExpectedException([{
+            return Right([{
                 tokenName: "NameTest",
                 position: input.position
             }]);
@@ -110,6 +110,6 @@ class NameTestTokenizer extends TokenTokenizer {
         var name = input.query.substr(input.position, characterLength);
         var result = [ cast(new NameTestToken(name), Token) ];
         characterLength += countWhitespace(input.query, pos);
-        return input.getOutput(result, characterLength);
+        return Left(input.getOutput(result, characterLength));
     }
 }

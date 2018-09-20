@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -44,7 +44,7 @@ class LiteralTokenizerTest extends TestCase {
                         quote + otherQuote, quote + quote, otherQuote + otherQuote
                     ]) {
                         var input = new TokenizerInput(quote + literal + quote + whitespace + garbage);
-                        var output = LiteralTokenizer.getInstance().tokenize(input);
+                        var output = LiteralTokenizer.getInstance().tokenize(input).tokens();
 
                         assertEquals(1, output.result.length);
                         assertEquals(quote.length + literal.length + quote.length + whitespace.length,
@@ -68,7 +68,7 @@ class LiteralTokenizerTest extends TestCase {
 
                         var caught = false;
                         try {
-                            LiteralTokenizer.getInstance().tokenize(input);
+                            LiteralTokenizer.getInstance().tokenize(input).tokens();
                         } catch (exception:ExpectedException) {
                             caught = true;
                             assertEquals(0, exception.position);

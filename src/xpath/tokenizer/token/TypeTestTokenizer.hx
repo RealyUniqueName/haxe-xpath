@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -20,7 +20,7 @@ import xpath.tokenizer.TokenizerInput;
 import xpath.tokenizer.Token;
 import xpath.tokenizer.ExpectedException;
 import xpath.NodeCategory;
-
+import haxe.ds.Either;
 
 /** [Tokenizer] which tokenizes according to the [NodeCategory] rule. */
 class TypeTestTokenizer extends TokenTokenizer {
@@ -65,14 +65,14 @@ class TypeTestTokenizer extends TokenTokenizer {
                 pos += countWhitespace(input.query, pos);
 
                 if (input.query.charAt(pos) != "(") {
-                    throw new ExpectedException([{ tokenName: "NodeCategory", position: input.position }]);
+                    return Right([{ tokenName: "NodeCategory", position: input.position }]);
                 }
 
                 ++pos;
                 pos += countWhitespace(input.query, pos);
 
                 if (input.query.charAt(pos) != ")") {
-                    throw new ExpectedException([{ tokenName: "NodeCategory", position: input.position }]);
+                    return Right([{ tokenName: "NodeCategory", position: input.position }]);
                 }
 
                 ++pos;
@@ -81,10 +81,10 @@ class TypeTestTokenizer extends TokenTokenizer {
                 var type:NodeCategory = typeTestNameToTypeTest.get(typeName);
                 var result = [ cast(new TypeTestToken(type), Token) ];
                 var characterLength = pos - input.position;
-                return input.getOutput(result, characterLength);
+                return Left(input.getOutput(result, characterLength));
             }
         }
 
-        throw new ExpectedException([ { tokenName: "NodeCategory", position: input.position } ]);
+        return Right([ { tokenName: "NodeCategory", position: input.position } ]);
     }
 }

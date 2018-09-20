@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -20,6 +20,7 @@ import xpath.tokenizer.TokenizerInput;
 import xpath.tokenizer.TokenizerOutput;
 import xpath.tokenizer.ExpectedException;
 import xpath.tokenizer.TokenizerError;
+import haxe.ds.Either;
 
 
 /** [Tokenizer] which tokenizes a string in a manner corresponding to
@@ -49,26 +50,26 @@ class Disjunction implements Tokenizer {
      * Throws [TokenizerException] if the [input] cannot be
      * tokenized by this [Tokenizer]. */
     public function tokenize(input:TokenizerInput) {
-        var expectedTokens = new List<{tokenName:String, position:Int}>();
+        var expectedTokens:Array<{tokenName:String, position:Int}> = [];
         var output:TokenizerOutput = null;
 
         for (tokenizer in tokenizers) {
-            try {
-                var tmpOutput = tokenizer.tokenize(input);
-                if (output == null || tmpOutput.characterLength > output.characterLength) {
-                    output = tmpOutput;
-                }
-            } catch (exception:ExpectedException) {
-                for (expectedToken in exception.expectedTokens) {
-                    expectedTokens.push(expectedToken);
-                }
+            switch(tokenizer.tokenize(input)) {
+                case Left(tmpOutput):
+                    if (output == null || tmpOutput.characterLength > output.characterLength) {
+                        output = tmpOutput;
+                    }
+                case Right(pendingTokens):
+                    for (expectedToken in pendingTokens) {
+                        expectedTokens.push(expectedToken);
+                    }
             }
         }
 
         if (output == null) {
-            throw new ExpectedException(expectedTokens);
+            return Right(expectedTokens);
         } else {
-            return output;
+            return Left(output);
         }
     }
 }

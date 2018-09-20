@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -31,15 +31,15 @@ class OptionalTest extends TestCase {
             cast(new FakeAnyCharTokenizer(), Tokenizer),
             new FakeAnyCharTokenizer()
         ]);
-        var output = tokenizer.tokenize(input);
+        var output = tokenizer.tokenize(input).tokens();
         assertEquals(2, output.characterLength);
         assertEquals(2, output.result.length);
 
-        output = tokenizer.tokenize(output.getNextInput());
+        output = tokenizer.tokenize(output.getNextInput()).tokens();
         assertEquals(2, output.characterLength);
         assertEquals(2, output.result.length);
 
-        output = tokenizer.tokenize(output.getNextInput());
+        output = tokenizer.tokenize(output.getNextInput()).tokens();
         assertEquals(0, output.characterLength);
         assertEquals(0, output.result.length);
 
@@ -47,7 +47,7 @@ class OptionalTest extends TestCase {
             cast(new FakeNeverTokenizer(), Tokenizer),
             new FakeAnyCharTokenizer()
         ]);
-        output = tokenizer.tokenize(input);
+        output = tokenizer.tokenize(input).tokens();
         assertEquals(0, output.characterLength);
         assertEquals(0, output.result.length);
 
@@ -55,7 +55,7 @@ class OptionalTest extends TestCase {
             cast(new FakeAnyCharTokenizer(), Tokenizer),
             new FakeNeverTokenizer()
         ]);
-        output = tokenizer.tokenize(input);
+        output = tokenizer.tokenize(input).tokens();
         assertEquals(0, output.characterLength);
         assertEquals(0, output.result.length);
     }

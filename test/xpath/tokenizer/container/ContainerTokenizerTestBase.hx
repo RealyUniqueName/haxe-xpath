@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -33,7 +33,7 @@ class ContainerTokenizerTestBase extends TestCase {
 
     function doGoodTest(query:String, expectedResult:Array<Token>) {
         var input = new TokenizerInput(query);
-        var output = tokenizer.tokenize(input);
+        var output = tokens(tokenizer.tokenize(input));
 
         assertEquals(query.length, output.characterLength);
         assertEquals(expectedResult.length, output.result.length);
@@ -60,17 +60,16 @@ class ContainerTokenizerTestBase extends TestCase {
         var input = new TokenizerInput(query);
 
         var caught = false;
-        try {
-            tokenizer.tokenize(input);
-        } catch (e:ExpectedException) {
-            caught = true;
+        switch(tokenizer.tokenize(input)) {
+            case Right(_): caught = true;
+            case Left(_):
         }
         assertTrue(caught);
     }
 
     private function doIncompleteTest(query:String) {
         var input = new TokenizerInput(query);
-        var output = tokenizer.tokenize(input);
+        var output = tokenizer.tokenize(input).tokens();
         assertTrue(output.characterLength < query.length);
     }
 }

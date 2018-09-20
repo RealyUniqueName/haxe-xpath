@@ -1,8 +1,8 @@
 /* Haxe XPath by Daniel J. Cassidy <mail@danielcassidy.me.uk>
  * Dedicated to the Public Domain
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS 
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -86,49 +86,49 @@ package xpath.tokenizer;
  *
  * [
  * XPath            = BeginXPath Expression EndXPath
- * 
+ *
  * Expression       = BeginExpression Operand ( Operator Operand )*
  *                    EndExpression
- * 
+ *
  * Operand          = Group | Literal | Number | FunctionCall
  *                  | VariableReference | UnaryOperand | Path
- * 
+ *
  * UnaryOperand     = NegationOperator NegationOperator* ( UnaryPath | Group
  *                  | Literal | Number | FunctionCall | VariableReference )
- * 
+ *
  * Path             = BeginPath
  *                    ( StepDelimiters
  *                    | ( StepDelimiters UnaryStep | Step )
  *                      ( StepDelimiters UnaryStep )*
  *                    ) EndPath
- * 
+ *
  * UnaryPath        = BeginPath
  *                    ( StepDelimiters
  *                    | StepDelimiters? UnaryStep ( StepDelimiters UnaryStep )*
  *                    ) EndPath
- * 
+ *
  * StepDelimiters   = StepDelimiter | DeepStepDelimiter
- * 
+ *
  * Step             = ( Axis NodeTest | FilterExpression ) Predicate*
  *                  | AbbreviatedStep
- * 
+ *
  * UnaryStep        = Axis NodeTest Predicate*
  *                  | AbbreviatedStep
- * 
+ *
  * FilterExpression = BeginExpression NegationOperator* FilterOperand
  *                    EndExpression
- * 
+ *
  * FilterOperand    = Group | Literal | Number | FunctionCall
  *                  | VariableReference
- * 
+ *
  * NodeTest         = NameTest | NodeCategory | PITypeTest
- * 
+ *
  * Predicate        = BeginPredicate Expression EndPredicate
- * 
+ *
  * Group            = BeginGroup Expression EndGroup
- * 
+ *
  * FunctionCall     = BeginFunctionCall FunctionArguments? EndFunctionCall
- * 
+ *
  * FunctionArguments= Expression ( ArgumentDelimiter Expression )*]
  *
  * <h3>Token rules</h3>
@@ -145,39 +145,39 @@ package xpath.tokenizer;
  *
  * [
  * BeginXPath          = ^ S
- * 
+ *
  * EndXPath            = $
- * 
+ *
  * BeginExpression     = ''
- * 
+ *
  * Operator            = ( "and" | "mod" | "div" | "or" | "!=" | "<=" | ">="
  *                       | "=" | "|" | "+" | "-" | "<" | ">" | "*"
  *                       ) S
- * 
+ *
  * EndExpression       = ''
- * 
+ *
  * BeginPath           = ''
- * 
+ *
  * EndPath             = ''
- * 
+ *
  * Literal             = ( '"' [^"]* '"' S
  *                       | "'" [^']* "'" ) S
- * 
+ *
  * Number              = ( [0-9]+ ( "." [0-9]* )?
  *                       | "." [0-9]+ ) S
- * 
+ *
  * VariableReference   = "$" NCName ( ":" NCName )? S
- * 
+ *
  * BeginPath           = ''
- * 
+ *
  * StepDelimiter       = '/'
- * 
+ *
  * DeepStepDelimiter   = '//'
- * 
+ *
  * EndPath             = ''
- * 
+ *
  * AbbreviatedStep     = ( '.' | '..' ) S
- * 
+ *
  * Axis                = ( ( "ancestor" | "ancestor-or-self" | "attribute"
  *                         | "child" | "descendant" | "descendant-or-self"
  *                         | "following" | "following-sibling" | "namespace"
@@ -185,26 +185,26 @@ package xpath.tokenizer;
  *                         | "self"
  *                         ) S "::"
  *                       | "@"? ) S
- * 
+ *
  * NameTest            = ( "*" | NCName ( ":" ( "*" | NCName ) )? ) S
- * 
+ *
  * NodeCategory            = ( "comment" | "text" | "node" ) S "(" S ")" S
- * 
+ *
  * PINameTest          = "processing-instruction" S "(" S
  *                       ( '"' [^"]* '"' | "'" [^']* "'" ) S ")" S
- * 
+ *
  * BeginPredicate      = '[' S
- * 
+ *
  * EndPredicate        = ']' S
- * 
+ *
  * BeginGroup          = '(' S
- * 
+ *
  * EndGroup            = ')' S
- * 
+ *
  * BeginFunctionCall   = NCName ( ':' NCName )? S '(' S
- * 
+ *
  * EndFunctionCall     = ')' S
- * 
+ *
  * ArgumentDelimiter   = ',' S]
  *
  * <h3>Special cases</h3>
@@ -223,5 +223,5 @@ interface Tokenizer {
      *
      * Throws [TokenizerException] if the [input] cannot be
      * tokenized by this [Tokenizer]. */
-    public function tokenize(input:TokenizerInput):TokenizerOutput;
+    public function tokenize(input:TokenizerInput):haxe.ds.Either<TokenizerOutput, Array<{tokenName:String, position:Int}>>;
 }
